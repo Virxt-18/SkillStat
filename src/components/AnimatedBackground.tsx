@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { animate } from "animejs";
 
 export default function AnimatedBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -13,21 +12,13 @@ export default function AnimatedBackground() {
 
     let width = 0;
     let height = 0;
-    let animationFrame: number;
-
-    const nodes: {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      radius: number;
-    }[] = [];
+    let animationFrame = 0;
 
     const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
       width = window.innerWidth;
       height = window.innerHeight;
-
-      const dpr = window.devicePixelRatio || 1;
 
       canvas.width = width * dpr;
       canvas.height = height * dpr;
@@ -38,104 +29,381 @@ export default function AnimatedBackground() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const createNodes = () => {
-      nodes.length = 0;
-
-      const count = Math.min(70, Math.max(25, Math.floor(width / 20)));
-
-      for (let i = 0; i < count; i++) {
-        nodes.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.25,
-          vy: (Math.random() - 0.5) * 0.25,
-          radius: Math.random() * 2 + 1.5, // was 1.5 + 0.5 → now 1.5–3.5px
-        });
-      }
-    };
-
-    const draw = () => {
+    const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
 
-      nodes.forEach((node) => {
-        node.x += node.vx;
-        node.y += node.vy;
+      const t = time * 0.00015;
 
-        if (node.x <= 0 || node.x >= width) node.vx *= -1;
-        if (node.y <= 0 || node.y >= height) node.vy *= -1;
-      });
+      // =====================================================
+      // DOT GRID
+      // =====================================================
 
-      // Connecting lines — stronger alpha
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const a = nodes[i];
-          const b = nodes[j];
+      const spacing = 46;
 
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+      ctx.fillStyle = "rgba(79, 70, 229, 0.055)";
 
-          if (distance < 140) {
-            const opacity = (1 - distance / 140) * 0.35; // was 0.13
-
-            ctx.beginPath();
-            ctx.moveTo(a.x, a.y);
-            ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = `rgba(99,102,241,${opacity})`;
-            ctx.lineWidth = 0.8;
-            ctx.stroke();
-          }
+      for (let x = 0; x < width; x += spacing) {
+        for (let y = 0; y < height; y += spacing) {
+          ctx.beginPath();
+          ctx.arc(x, y, 1, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
+// =====================================================
+// DECORATIVE BACKGROUND PATCHES
+// =====================================================
 
-      // Nodes — bigger, brighter, with a soft glow
-      nodes.forEach((node) => {
+// -----------------------------
+// TOP RIGHT — soft blue patch
+// -----------------------------
+
+const topRightGradient = ctx.createRadialGradient(
+  width * 0.98,
+  height * 0.05,
+  0,
+  width * 0.98,
+  height * 0.05,
+  330
+);
+
+topRightGradient.addColorStop(
+  0,
+  "rgba(125, 211, 252, 0.30)"
+);
+
+topRightGradient.addColorStop(
+  0.55,
+  "rgba(186, 230, 253, 0.20)"
+);
+
+topRightGradient.addColorStop(
+  1,
+  "rgba(186, 230, 253, 0)"
+);
+
+ctx.fillStyle = topRightGradient;
+
+ctx.beginPath();
+ctx.arc(
+  width * 0.98,
+  height * 0.05,
+  330,
+  0,
+  Math.PI * 2
+);
+ctx.fill();
+
+
+// -----------------------------
+// BOTTOM LEFT — mint patch
+// -----------------------------
+
+const bottomLeftGradient = ctx.createRadialGradient(
+  width * 0.02,
+  height * 0.96,
+  0,
+  width * 0.02,
+  height * 0.96,
+  350
+);
+
+bottomLeftGradient.addColorStop(
+  0,
+  "rgba(94, 234, 212, 0.28)"
+);
+
+bottomLeftGradient.addColorStop(
+  0.55,
+  "rgba(153, 246, 228, 0.18)"
+);
+
+bottomLeftGradient.addColorStop(
+  1,
+  "rgba(204, 251, 241, 0)"
+);
+
+ctx.fillStyle = bottomLeftGradient;
+
+ctx.beginPath();
+ctx.arc(
+  width * 0.02,
+  height * 0.96,
+  350,
+  0,
+  Math.PI * 2
+);
+ctx.fill();
+
+
+// -----------------------------
+// BOTTOM RIGHT — soft blue patch
+// -----------------------------
+
+const bottomRightGradient = ctx.createRadialGradient(
+  width * 0.98,
+  height * 0.96,
+  0,
+  width * 0.98,
+  height * 0.96,
+  300
+);
+
+bottomRightGradient.addColorStop(
+  0,
+  "rgba(147, 197, 253, 0.24)"
+);
+
+bottomRightGradient.addColorStop(
+  0.55,
+  "rgba(191, 219, 254, 0.15)"
+);
+
+bottomRightGradient.addColorStop(
+  1,
+  "rgba(219, 234, 254, 0)"
+);
+
+ctx.fillStyle = bottomRightGradient;
+
+ctx.beginPath();
+ctx.arc(
+  width * 0.98,
+  height * 0.96,
+  300,
+  0,
+  Math.PI * 2
+);
+ctx.fill();
+      // =====================================================
+      // INDIGO DATA FIELD
+      // =====================================================
+
+      const indigoX =
+        width * 0.16 + Math.sin(t) * 55;
+
+      const indigoY =
+        height * 0.22 + Math.cos(t * 1.2) * 35;
+
+      const indigoGradient = ctx.createRadialGradient(
+        indigoX,
+        indigoY,
+        0,
+        indigoX,
+        indigoY,
+        430
+      );
+
+      indigoGradient.addColorStop(
+        0,
+        "rgba(79, 70, 229, 0.10)"
+      );
+
+      indigoGradient.addColorStop(
+        0.45,
+        "rgba(79, 70, 229, 0.045)"
+      );
+
+      indigoGradient.addColorStop(
+        1,
+        "rgba(79, 70, 229, 0)"
+      );
+
+      ctx.fillStyle = indigoGradient;
+
+      ctx.beginPath();
+      ctx.arc(
+        indigoX,
+        indigoY,
+        430,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      // =====================================================
+      // TEAL DATA FIELD
+      // =====================================================
+
+      const tealX =
+        width * 0.83 + Math.cos(t * 0.8) * 60;
+
+      const tealY =
+        height * 0.55 + Math.sin(t) * 45;
+
+      const tealGradient = ctx.createRadialGradient(
+        tealX,
+        tealY,
+        0,
+        tealX,
+        tealY,
+        420
+      );
+
+      tealGradient.addColorStop(
+        0,
+        "rgba(13, 148, 136, 0.085)"
+      );
+
+      tealGradient.addColorStop(
+        0.5,
+        "rgba(13, 148, 136, 0.035)"
+      );
+
+      tealGradient.addColorStop(
+        1,
+        "rgba(13, 148, 136, 0)"
+      );
+
+      ctx.fillStyle = tealGradient;
+
+      ctx.beginPath();
+      ctx.arc(
+        tealX,
+        tealY,
+        420,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      // =====================================================
+      // SUBTLE AMBER FIELD
+      // =====================================================
+
+      const amberX =
+        width * 0.68 + Math.sin(t * 0.7) * 40;
+
+      const amberY =
+        height * 0.18 + Math.cos(t) * 30;
+
+      const amberGradient = ctx.createRadialGradient(
+        amberX,
+        amberY,
+        0,
+        amberX,
+        amberY,
+        180
+      );
+
+      amberGradient.addColorStop(
+        0,
+        "rgba(245, 158, 11, 0.045)"
+      );
+
+      amberGradient.addColorStop(
+        1,
+        "rgba(245, 158, 11, 0)"
+      );
+
+      ctx.fillStyle = amberGradient;
+
+      ctx.beginPath();
+      ctx.arc(
+        amberX,
+        amberY,
+        180,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+
+      // =====================================================
+      // FLOWING DATA LINES
+      // =====================================================
+
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i < 7; i++) {
+        const baseX =
+          width * 0.03 + i * 190;
+
+        const movement =
+          Math.sin(t * 0.8 + i) * 25;
+
         ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
 
-        ctx.shadowColor = "rgba(99,102,241,0.9)";
-        ctx.shadowBlur = 6;
-        ctx.fillStyle = "rgba(99,102,241,0.9)"; // was 0.35
+        ctx.moveTo(
+          baseX + movement,
+          -50
+        );
+
+        ctx.bezierCurveTo(
+          baseX + 170,
+          height * 0.25,
+          baseX - 100,
+          height * 0.62,
+          baseX + 120,
+          height + 50
+        );
+
+        ctx.strokeStyle =
+          i % 2 === 0
+            ? "rgba(79, 70, 229, 0.035)"
+            : "rgba(13, 148, 136, 0.03)";
+
+        ctx.stroke();
+      }
+
+      // =====================================================
+      // SMALL DATA PARTICLES
+      // =====================================================
+
+      const particleCount = 38;
+
+      for (let i = 0; i < particleCount; i++) {
+        const x =
+          (i * 191 + 40) % width;
+
+        const baseY =
+          (i * 113 + 20) % height;
+
+        const y =
+          baseY +
+          Math.sin(t * 1.5 + i) * 15;
+
+        const opacity =
+          0.08 +
+          (Math.sin(t * 1.3 + i) + 1) * 0.035;
+
+        ctx.fillStyle =
+          i % 4 === 0
+            ? `rgba(13, 148, 136, ${opacity})`
+            : `rgba(79, 70, 229, ${opacity})`;
+
+        ctx.beginPath();
+
+        ctx.arc(
+          x,
+          y,
+          i % 8 === 0 ? 2 : 1,
+          0,
+          Math.PI * 2
+        );
+
         ctx.fill();
-        ctx.shadowBlur = 0; // reset so it doesn't bleed into lines next frame
-      });
+      }
 
-      animationFrame = requestAnimationFrame(draw);
+      animationFrame =
+        requestAnimationFrame(draw);
     };
 
     resize();
-    createNodes();
-    draw();
 
-    const handleResize = () => {
-      resize();
-      createNodes();
-    };
+    animationFrame =
+      requestAnimationFrame(draw);
 
-    window.addEventListener("resize", handleResize);
-
-    // Anime.js v4
-    const pulse = {
-      opacity: 0.35,
-    };
-
-    const animation = animate(pulse, {
-      opacity: [0.5, 0.85], // was [0.2, 0.6]
-      duration: 2800,
-      ease: "inOutSine",
-      alternate: true,
-      loop: true,
-      onUpdate: () => {
-        canvas.style.opacity = `${pulse.opacity}`;
-      },
-    });
+    window.addEventListener(
+      "resize",
+      resize
+    );
 
     return () => {
       cancelAnimationFrame(animationFrame);
 
-      window.removeEventListener("resize", handleResize);
-
-      animation.pause();
+      window.removeEventListener(
+        "resize",
+        resize
+      );
     };
   }, []);
 
@@ -144,13 +412,14 @@ export default function AnimatedBackground() {
       ref={canvasRef}
       className="
         pointer-events-none
-        fixed
+        absolute
         inset-0
-        -z-10
+        z-0
         h-full
         w-full
-        opacity-40
+        opacity-100
       "
+      aria-hidden="true"
     />
   );
 }
