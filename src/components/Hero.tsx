@@ -4,12 +4,9 @@ import { animate, stagger } from "animejs";
 import GapChart from "./GapChart";
 import AnimatedBackground from "./AnimatedBackground";
 
-import {
-  ArrowRight,
-  CheckCircle2,
-  ShieldCheck,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, ShieldCheck, Zap } from "lucide-react";
+
+import HeroCanvas from "./HeroCanvas";
 
 interface HeroProps {
   revealed: boolean;
@@ -22,7 +19,7 @@ export default function Hero({ revealed }: HeroProps) {
     if (!revealed || !heroRef.current) return;
 
     const items = Array.from(
-      heroRef.current.querySelectorAll<HTMLElement>(".hero-item")
+      heroRef.current.querySelectorAll<HTMLElement>(".hero-item"),
     );
 
     if (!items.length) return;
@@ -44,10 +41,11 @@ export default function Hero({ revealed }: HeroProps) {
         relative
         isolate
         w-full
+        min-h-screen
         min-w-0
-      
-        min-h-0 overflow-hidden 
+     overflow-hidden 
         bg-[#f7fbff]
+        flex justify-center items-center pb-7
       "
     >
       {/* =====================================================
@@ -58,37 +56,37 @@ export default function Hero({ revealed }: HeroProps) {
       {/* =====================================================
     DECORATIVE ROUND PATCHES
 ====================================================== */}
-{/* Decorative background shapes */}
-<div
-  aria-hidden="true"
-  className="pointer-events-none absolute right-[-90px] top-[-70px] z-0 h-[300px] w-[420px] rounded-[48%_52%_60%_40%] bg-gradient-to-br from-cyan-100/80 via-sky-100/70 to-indigo-100/70 blur-[1px]"
-/>
+      {/* Decorative background shapes */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-90px] top-[-70px] z-0 h-[300px] w-[420px] rounded-[48%_52%_60%_40%] bg-gradient-to-br from-cyan-100/80 via-sky-100/70 to-indigo-100/70 blur-[1px]"
+      />
 
-<div
-  aria-hidden="true"
-  className="pointer-events-none absolute right-[-20px] top-[-20px] z-0 h-[220px] w-[280px] rounded-[60%_40%_45%_55%] bg-gradient-to-bl from-indigo-100/75 via-blue-100/60 to-transparent"
-  style={{ transform: "rotate(18deg)" }}
-/>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-20px] top-[-20px] z-0 h-[220px] w-[280px] rounded-[60%_40%_45%_55%] bg-gradient-to-bl from-indigo-100/75 via-blue-100/60 to-transparent"
+        style={{ transform: "rotate(18deg)" }}
+      />
 
-<div
-  aria-hidden="true"
-  className="pointer-events-none absolute right-[70px] top-[55px] z-0 h-[150px] w-[190px] rounded-[45%_55%_60%_40%] bg-gradient-to-br from-teal-100/60 via-cyan-100/50 to-transparent"
-  style={{ transform: "rotate(-12deg)" }}
-/>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[70px] top-[55px] z-0 h-[150px] w-[190px] rounded-[45%_55%_60%_40%] bg-gradient-to-br from-teal-100/60 via-cyan-100/50 to-transparent"
+        style={{ transform: "rotate(-12deg)" }}
+      />
 
-<div
-  aria-hidden="true"
-  className="pointer-events-none absolute bottom-[-90px] left-[-80px] z-0 h-[280px] w-[430px] rounded-[65%_35%_40%_60%] bg-gradient-to-tr from-teal-100/80 via-cyan-100/65 to-indigo-100/40"
-  style={{ transform: "rotate(-8deg)" }}
-/>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-90px] left-[-80px] z-0 h-[280px] w-[430px] rounded-[65%_35%_40%_60%] bg-gradient-to-tr from-teal-100/80 via-cyan-100/65 to-indigo-100/40"
+        style={{ transform: "rotate(-8deg)" }}
+      />
 
-<div
-  aria-hidden="true"
-  className="pointer-events-none absolute bottom-[-55px] right-[-35px] z-0 h-[180px] w-[180px] rounded-full opacity-55 [background-image:radial-gradient(circle,#cbd5e1_1.2px,transparent_1.2px)] [background-size:14px_14px]"
-/>
-{/* Top-right pastel patch */}
-<div
-  className="
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-55px] right-[-35px] z-0 h-[180px] w-[180px] rounded-full opacity-55 [background-image:radial-gradient(circle,#cbd5e1_1.2px,transparent_1.2px)] [background-size:14px_14px]"
+      />
+      {/* Top-right pastel patch */}
+      <div
+        className="
     pointer-events-none
     absolute
     -right-16
@@ -102,11 +100,11 @@ export default function Hero({ revealed }: HeroProps) {
     via-cyan-100/60
     to-indigo-100/70
   "
-/>
+      />
 
-{/* Bottom-left pastel patch */}
-<div
-  className="
+      {/* Bottom-left pastel patch */}
+      <div
+        className="
     pointer-events-none
     absolute
     -bottom-16
@@ -120,11 +118,11 @@ export default function Hero({ revealed }: HeroProps) {
     via-cyan-100/60
     to-indigo-50/50
   "
-/>
+      />
 
-{/* Bottom-right dotted patch */}
-<div
-  className="
+      {/* Bottom-right dotted patch */}
+      <div
+        className="
     pointer-events-none
     absolute
     bottom-3
@@ -137,7 +135,7 @@ export default function Hero({ revealed }: HeroProps) {
     [background-image:radial-gradient(circle,#cbd5e1_1.2px,transparent_1.2px)]
     [background-size:14px_14px]
   "
-/>
+      />
 
       {/* Ambient indigo glow */}
 
@@ -237,10 +235,9 @@ export default function Hero({ revealed }: HeroProps) {
               w-full
               max-w-[650px]
               pt-20
+              
             "
           >
-           
-
             {/* =================================================
                 HEADLINE
             ================================================== */}
@@ -248,7 +245,6 @@ export default function Hero({ revealed }: HeroProps) {
             <h1
               className="
                 max-w-[650px]
-                font-display
                 text-[44px]
                 font-bold
                 leading-[1.02]
@@ -258,11 +254,11 @@ export default function Hero({ revealed }: HeroProps) {
                 md:text-[58px]
                 lg:text-[64px]
                 xl:text-[70px]
+                italic
               "
             >
               Build skills.
               <br />
-
               <span
                 className="
                   bg-gradient-to-r
@@ -275,9 +271,7 @@ export default function Hero({ revealed }: HeroProps) {
               >
                 Close the gap.
               </span>
-
               <br />
-
               Grow faster.
             </h1>
 
@@ -295,10 +289,9 @@ export default function Hero({ revealed }: HeroProps) {
                 md:text-[17px]
               "
             >
-              SkillStat analyzes real-world performance,
-              identifies skill gaps, and creates personalized
-              learning pathways so you can build the skills
-              that matter and grow faster.
+              SkillStat identifies competency gaps, personalizes learning paths,
+              and enables continuous skill improvement through AI-driven
+              assessments.
             </p>
 
             {/* =================================================
@@ -342,9 +335,7 @@ export default function Hero({ revealed }: HeroProps) {
                   active:scale-95
                 "
               >
-                <span>
-                  Start Free Assessment
-                </span>
+                <span>Start Skill Assessment</span>
 
                 <ArrowRight
                   className="
@@ -423,7 +414,6 @@ export default function Hero({ revealed }: HeroProps) {
                     text-emerald-500
                   "
                 />
-
                 Zero manual surveys
               </span>
 
@@ -445,7 +435,6 @@ export default function Hero({ revealed }: HeroProps) {
                     text-indigo-600
                   "
                 />
-
                 Real-time tracking
               </span>
 
@@ -467,7 +456,6 @@ export default function Hero({ revealed }: HeroProps) {
                     text-violet-500
                   "
                 />
-
                 Trusted & secure
               </span>
             </div>
@@ -476,231 +464,29 @@ export default function Hero({ revealed }: HeroProps) {
           {/* =================================================
               RIGHT DASHBOARD COLUMN
           ================================================== */}
-
-          <div
-            className="
-              relative
-              flex
-              min-w-0
-              w-full
-              items-center
-              justify-end
-            "
-          >
-            <div
+          <div className="relative">
+            <img
+              src="/bg.png"
+              alt=""
+              aria-hidden="true"
               className="
-                relative
-                w-full
-                max-w-[650px] ml-auto
-              
+                absolute
+                right-[7%]
+                -top-[100px]
+                z-10
+                h-[560px]
+                w-auto
+                max-w-none
+                object-contain
+                opacity-90
+                filter-[brightness(0)_saturate(100%)_invert(18%)_sepia(99%)_saturate(7498%)_hue-rotate(240deg)_brightness(101%)_contrast(145%)]
+                sm:h-[650px]
+                lg:right-[12%]
+                lg:h-[760px]
+                xl:h-[820px]
+                
               "
-            >
-              {/* =================================================
-                  FLOATING NEXT LEARNING CARD
-              ================================================== */}
-
-              <div
-                className="
-                  absolute
-                  right-6
-                  top-5
-                  z-30
-                  hidden
-                  w-[160px]
-                  rounded-2xl
-                  border
-                  border-teal-100
-                  bg-cyan-50//95
-                  p-3
-                  shadow-[0_18px_45px_rgba(15,23,42,0.12)]
-                  backdrop-blur-xl
-                  lg:block
-                "
-              >
-                <div
-                  className="
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-[0.12em]
-                    text-slate-400
-                  "
-                >
-                  Next learning
-                </div>
-
-                <div
-                  className="
-                    mt-1.5
-                    text-sm
-                    font-semibold
-                    text-slate-800
-                  "
-                >
-                  Estimation Methods
-                </div>
-
-                <div
-                  className="
-                    mt-2
-                    text-[11px]
-                    leading-4
-                    text-slate-500
-                  "
-                >
-                  Recommended based on your
-                  current competency gap.
-                </div>
-
-                <div
-                  className="
-                    mt-3
-                    flex
-                    items-center
-                    gap-2
-                    text-[10px]
-                    font-medium
-                    text-teal-600
-                  "
-                >
-                  <span
-                    className="
-                      h-1.5
-                      w-1.5
-                      rounded-full
-                      bg-teal-500
-                    "
-                  />
-
-                  AI recommendation
-                </div>
-              </div>
-
-              {/* =================================================
-                  MAIN COMPETENCY DASHBOARD
-              ================================================== */}
-
-              <div
-                className="
-                  relative
-                  z-10
-                  w-full
-                  min-w-0
-                  rounded-[2rem]
-                  border
-                  border-white/80
-                  bg-white/70
-                  p-3
-                  shadow-[0_25px_80px_rgba(14,165,233,0.10)]
-                  backdrop-blur-2xl
-                "
-              >
-                {/* Glass highlight */}
-
-                <div
-                  className="
-                    pointer-events-none
-                    absolute
-                    inset-0
-                    rounded-[2rem]
-                    bg-gradient-to-br
-                    from-white/60
-                    via-transparent
-                    to-cyan-100/15
-                  "
-                />
-
-                {/* Actual dashboard */}
-
-                <div
-                  className="
-                    relative
-                    z-10
-                    w-full
-                    min-w-0
-                    translate-x-4
-                  "
-                >
-                  <GapChart />
-                </div>
-
-                {/* =================================================
-                    OVERALL COMPETENCY BADGE
-                ================================================== */}
-
-                <div
-                  className="
-                    absolute
-                    bottom-4
-                    left-3
-                    z-30
-                    hidden
-                    rounded-xl
-                    border
-                    border-teal-100/80
-                    bg-white/95
-                    px-2.5
-                    py-1.5
-                    shadow-[0_15px_35px_rgba(15,23,42,0.10)]
-                    backdrop-blur-xl
-                    sm:block
-                  "
-                >
-                  <div
-                    className="
-                      text-[10px]
-                      font-medium
-                      uppercase
-                      tracking-wide
-                      text-slate-400
-                    "
-                  >
-                    Overall competency
-                  </div>
-
-                  <div
-                    className="
-                      mt-1
-                      flex
-                      items-end
-                      gap-2
-                    "
-                  >
-                    <span
-                      className="
-                        text-2xl
-                        font-bold
-                        tracking-tight
-                        text-slate-900
-                      "
-                    >
-                      68%
-                    </span>
-
-                    <span
-                      className="
-                        mb-1
-                        text-xs
-                        font-semibold
-                        text-teal-600
-                      "
-                    >
-                      +12%
-                    </span>
-                  </div>
-
-                  <div
-                    className="
-                      mt-1
-                      text-[10px]
-                      text-slate-400
-                    "
-                  >
-                    vs. last month
-                  </div>
-                </div>
-              </div>
-            </div>
+            />
           </div>
         </div>
       </div>

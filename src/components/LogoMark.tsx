@@ -24,7 +24,7 @@ export default function LogoMark({
       style={{ gap: `${gapPx}px` }}
     >
       <img
-        src="/logo-mark-indigo.png"
+        src="/logo-mark-ink.png"
         alt="SkillStat"
         aria-hidden="true"
         width={iconPx}
@@ -37,7 +37,7 @@ export default function LogoMark({
         className={`font-display font-bold tracking-tight ${
           tone === "white" ? "text-white" : "text-ink"
         }`}
-        style={{ fontSize: `${textPx}px`, lineHeight: 1.05 }}
+        style={{ fontSize: `${textPx + 3}px`, lineHeight: 1.05 }}
       >
         SkillStat
       </span>

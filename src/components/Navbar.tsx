@@ -33,7 +33,7 @@ const Navbar = forwardRef<HTMLSpanElement, NavbarProps>(function Navbar(
     <header
       className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${
         revealed
-          ? "border-b border-line/80 bg-paper/90 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
+          ? "border-b border-line/80 bg-paper/10 backdrop-blur-md shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
           : "border-b border-transparent bg-transparent pointer-events-none"
       }`}
     >
@@ -70,7 +70,7 @@ const Navbar = forwardRef<HTMLSpanElement, NavbarProps>(function Navbar(
             <a
               key={link.label}
               href={link.href}
-              className="text-[14.5px] font-medium text-ink-soft transition-colors hover:text-brand-600"
+              className="text-[15px] font-medium text-[rgba(87,87,87,1)] transition-colors hover:text-brand-600"
             >
               {link.label}
             </a>
